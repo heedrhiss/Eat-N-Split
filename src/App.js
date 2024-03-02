@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./index.css";
 
 const initialFriends = [
@@ -25,6 +26,7 @@ function App() {
   return (
     <div className="app">
       <FriendList />
+      <SplitBill />
     </div>
   );
 }
@@ -63,23 +65,57 @@ function Friend({ friend }) {
   );
 }
 
-function Button({ children }) {
-  return <button className="button">{children}</button>;
+function Button({ event, children }) {
+  return (
+    <button className="button" onClick={event}>
+      {children}
+    </button>
+  );
 }
 
 function AddFriend() {
+  const [isOpen, setIsOpen] = useState(true);
+  function handleClose() {
+    setIsOpen(!isOpen);
+  }
   return (
     <>
-      <form className="form-add-friend">
-        <label>👬Friend Name</label>
-        <input type="text" />
+      {isOpen && (
+        <form className="form-add-friend">
+          <label>👬Friend Name</label>
+          <input type="text" />
 
-        <label>📸 Image URL</label>
-        <input type="text" />
-        <Button>Add</Button>
-      </form>
-      <Button>Close</Button>
+          <label>📸 Image URL</label>
+          <input type="text" />
+          <Button>Add</Button>
+        </form>
+      )}
+
+      <Button event={handleClose}>{isOpen ? "Close" : "Add Friend"}</Button>
     </>
+  );
+}
+
+function SplitBill() {
+  return (
+    <form className="form-split-bill">
+      <h2>SPLIT A BILL WITH FRIEND</h2>
+      <label>💰 Bill Value</label>
+      <input type="text" />
+
+      <label>🕴 Your Expense</label>
+      <input type="text" />
+
+      <label>👬 Friend Expense</label>
+      <input type="text" />
+
+      <label>💳 Who is paying?</label>
+      <select>
+        <option value="me">Me</option>
+        <option value="friend">Friend</option>
+      </select>
+      <Button>Split Bill</Button>
+    </form>
   );
 }
 
