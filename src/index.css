@@ -56,6 +56,7 @@ body {
   gap: 0.4rem;
   font-size: 1.4rem;
   margin-bottom: 2rem;
+  background-color: var(--color-lightest);
 }
 
 .sidebar li {
@@ -71,7 +72,7 @@ body {
 
 .selected,
 .sidebar li:hover {
-  background-color: var(--color-lightest);
+  background-color: #fff;
 }
 
 .sidebar li img {

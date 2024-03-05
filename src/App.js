@@ -24,6 +24,7 @@ const initialFriends = [
 
 function App() {
   const [selectFriend, setSelectFriend] = useState(null);
+  const [friendList, setFriendList] = useState(initialFriends);
 
   function friendSelect(friend) {
     setSelectFriend((curSelect) =>
@@ -31,17 +32,34 @@ function App() {
     );
   }
 
+  function handleBalance(value) {
+    setFriendList((cur) =>
+      friendList.map((friend) =>
+        friend.id === selectFriend.id
+          ? { ...friend, balance: friend.balance + value }
+          : friend
+      )
+    );
+    setSelectFriend(null);
+  }
+
   return (
     <div className="app">
-      <FriendList selection={friendSelect} selectFriend={selectFriend} />
-      {selectFriend && <SplitBill selectFriend={selectFriend} />}
+      <FriendList
+        friendList={friendList}
+        setFriendList={setFriendList}
+        selection={friendSelect}
+        selectFriend={selectFriend}
+      />
+      {selectFriend && (
+        <SplitBill selectFriend={selectFriend} onSplitBill={handleBalance} />
+      )}
     </div>
   );
 }
 
-function FriendList({ selection, selectFriend }) {
+function FriendList({ friendList, setFriendList, selection, selectFriend }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [friendList, setFriendList] = useState(initialFriends);
 
   function handleNewFriend(newFriend) {
     setFriendList([...friendList, newFriend]);
@@ -150,14 +168,21 @@ function AddFriend({ isOpen, setIsOpen, handleNewFriend }) {
   );
 }
 
-function SplitBill({ selectFriend }) {
+function SplitBill({ selectFriend, onSplitBill }) {
   const [bill, setBill] = useState("");
   const [myBill, setMyBill] = useState("");
   const [payer, setPayer] = useState("me");
   const friendBill = bill - myBill;
 
+  function handleSplit(e) {
+    e.preventDefault();
+    if (!bill) return;
+    const whoIsPaying = payer === "me" ? myBill : -friendBill;
+    onSplitBill(whoIsPaying);
+  }
+
   return (
-    <form className="form-split-bill">
+    <form className="form-split-bill" onSubmit={handleSplit}>
       <h2>SPLIT A BILL WITH {selectFriend.name}</h2>
       <label>💰 Bill Value</label>
       <input
