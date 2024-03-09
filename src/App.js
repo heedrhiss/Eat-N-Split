@@ -52,7 +52,7 @@ function App() {
         selectFriend={selectFriend}
       />
       {selectFriend && (
-        <SplitBill selectFriend={selectFriend} onSplitBill={handleBalance} />
+        <SplitBill selectFriend={selectFriend} onSplitBill={handleBalance} key={selectFriend.id} />
       )}
     </div>
   );
